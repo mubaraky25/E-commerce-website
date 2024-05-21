@@ -28,14 +28,12 @@ const Signup = props => {
       reset();
       history.push('/');
     }
-
-  }, [currentUser]);
+  }, [currentUser, history]);
 
   useEffect(() => {
     if (Array.isArray(userErr) && userErr.length > 0) {
       setErrors(userErr);
     }
-
   }, [userErr]);
 
   const reset = () => {
@@ -57,32 +55,29 @@ const Signup = props => {
   }
 
   const configAuthWrapper = {
-    headline: 'Registration'
+    headline: 'Create an Account'
   };
 
   return (
     <AuthWrapper {...configAuthWrapper}>
-      <div className="formWrap">
-
+      <div className="formContainer">
         {errors.length > 0 && (
-          <ul>
-            {errors.map((err, index) => {
-              return (
-                <li key={index}>
-                  {err}
-                </li>
-              );
-            })}
+          <ul className="errorList">
+            {errors.map((err, index) => (
+              <li key={index}>
+                {err}
+              </li>
+            ))}
           </ul>
         )}
 
         <form onSubmit={handleFormSubmit}>
-
           <FormInput
             type="text"
             name="displayName"
             value={displayName}
-            placeholder="Full name"
+            placeholder="Full Name"
+            label="Full Name"
             handleChange={e => setDisplayName(e.target.value)}
           />
 
@@ -90,7 +85,8 @@ const Signup = props => {
             type="email"
             name="email"
             value={email}
-            placeholder="Email"
+            placeholder="Enter your email"
+            label="Email Address"
             handleChange={e => setEmail(e.target.value)}
           />
 
@@ -98,7 +94,8 @@ const Signup = props => {
             type="password"
             name="password"
             value={password}
-            placeholder="Password"
+            placeholder="Create a password"
+            label="Password"
             handleChange={e => setPassword(e.target.value)}
           />
 
@@ -106,23 +103,24 @@ const Signup = props => {
             type="password"
             name="confirmPassword"
             value={confirmPassword}
-            placeholder="Confirm Password"
+            placeholder="Confirm your password"
+            label="Confirm Password"
             handleChange={e => setConfirmPassword(e.target.value)}
           />
 
           <Button type="submit">
-            Register
+            Sign Up
           </Button>
         </form>
 
         <div className="links">
           <Link to="/login">
-            LogIn
+            Already have an account? Log In
           </Link>
           {` | `}
           <Link to="/recovery">
-            Reset Password
-            </Link>
+            Forgot Password?
+          </Link>
         </div>
       </div>
     </AuthWrapper>

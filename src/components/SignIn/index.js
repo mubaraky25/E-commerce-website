@@ -18,24 +18,25 @@ const SignIn = props => {
   const history = useHistory();
   const { currentUser } = useSelector(mapState);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
       resetForm();
       history.push('/');
     }
-
-  }, [currentUser]);
+  }, [currentUser, history]);
 
   const resetForm = () => {
     setEmail('');
     setPassword('');
+    setRememberMe(false);
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    dispatch(emailSignInStart({ email, password }));
+    dispatch(emailSignInStart({ email, password, rememberMe }));
   }
 
   const handleGoogleSignIn = () => {
@@ -43,19 +44,19 @@ const SignIn = props => {
   }
 
   const configAuthWrapper = {
-    headline: 'LogIn'
+    headline: 'Sign In to Your Account'
   };
 
   return (
     <AuthWrapper {...configAuthWrapper}>
-      <div className="formWrap">
+      <div className="formContainer">
         <form onSubmit={handleSubmit}>
-
           <FormInput
             type="email"
             name="email"
             value={email}
-            placeholder="Email"
+            placeholder="Enter your email"
+            label="Email Address"
             handleChange={e => setEmail(e.target.value)}
           />
 
@@ -63,15 +64,26 @@ const SignIn = props => {
             type="password"
             name="password"
             value={password}
-            placeholder="Password"
+            placeholder="Enter your password"
+            label="Password"
             handleChange={e => setPassword(e.target.value)}
           />
 
+          <div className="formRow">
+            <input
+              type="checkbox"
+              name="rememberMe"
+              checked={rememberMe}
+              onChange={e => setRememberMe(e.target.checked)}
+            />
+            <label htmlFor="rememberMe">Remember Me</label>
+          </div>
+
           <Button type="submit">
-            LogIn
+            Sign In
           </Button>
 
-          <div className="socialSignin">
+          <div className="socialSignIn">
             <div className="row">
               <Button onClick={handleGoogleSignIn}>
                 Sign in with Google
@@ -81,14 +93,13 @@ const SignIn = props => {
 
           <div className="links">
             <Link to="/registration">
-              Register
+              Create an Account
             </Link>
             {` | `}
             <Link to="/recovery">
-              Reset Password
+              Forgot Password?
             </Link>
           </div>
-
         </form>
       </div>
     </AuthWrapper>

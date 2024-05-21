@@ -10,7 +10,7 @@ const mapState = state => ({
   product: state.productsData.product
 });
 
-const ProductCard = ({}) => {
+const ProductCard = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { productID } = useParams();
@@ -21,26 +21,21 @@ const ProductCard = ({}) => {
     productName,
     productPrice,
     productDesc,
-  } = product;
+  } = product || {};
 
   useEffect(() => {
-    dispatch(
-      fetchProductStart(productID)
-    )
-
-    return () => {
-      dispatch(
-        setProduct({})
-      )
+    if (productID) {
+      dispatch(fetchProductStart(productID));
     }
 
-  }, []);
+    return () => {
+      dispatch(setProduct({}));
+    };
+  }, [productID, dispatch]);
 
   const handleAddToCart = (product) => {
     if (!product) return;
-    dispatch(
-      addProduct(product)
-    );
+    dispatch(addProduct(product));
     history.push('/cart');
   }
 
@@ -50,34 +45,16 @@ const ProductCard = ({}) => {
 
   return (
     <div className="productCard">
-      <div className="hero">
-        <img src={productThumbnail} />
+      <div className="productHero">
+        <img src={productThumbnail} alt={productName} />
       </div>
       <div className="productDetails">
-        <ul>
-          <li>
-            <h1>
-              {productName}
-            </h1>
-          </li>
-          <li>
-            <span>
-              £{productPrice}
-            </span>
-          </li>
-          <li>
-            <div className="addToCart">
-              <Button {...configAddToCartBtn} onClick={() => handleAddToCart(product)}>
-                Add to cart
-              </Button>
-            </div>
-          </li>
-          <li>
-            <span
-              className="desc"
-              dangerouslySetInnerHTML={{ __html: productDesc }} />
-          </li>
-        </ul>
+        <h1 className="productName">{productName}</h1>
+        <span className="productPrice">£{productPrice}</span>
+        <div className="productDesc" dangerouslySetInnerHTML={{ __html: productDesc }} />
+        <Button {...configAddToCartBtn} onClick={() => handleAddToCart(product)}>
+          Add to cart
+        </Button>
       </div>
     </div>
   );
